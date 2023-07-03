@@ -1,0 +1,45 @@
+<%- 
+styles = null
+%>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Contact List</h2>
+
+            <a href="/contact/create" class="btn btn-primary my-2"><i class="bi bi-plus-circle"></i> Create Contact</a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (!contacts.length > 0) { %>
+                    <tr>
+                        <td colspan="4" class="text-center">Contact not found!</td>
+                    </tr>
+                    <% } %>
+
+                    <% contacts.forEach((c,i) => { i++ %>
+                    <tr>
+                        <th scope="row"><%= i++  %></th>
+                        <td><%= c.name  %></td>
+                        <td><%= c.phone  %></td>
+                        <td>
+                            <a href="/contact/<%= c.name %>" class="btn btn-info btn-sm">
+                                <i class="bi bi-info-circle-fill"></i>
+                                Detail
+                            </a>
+                        </td>
+                    </tr>
+                    <% }) %>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
