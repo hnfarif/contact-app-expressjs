@@ -7,6 +7,13 @@ styles = null
             <h2>Contact List</h2>
 
             <a href="/contact/create" class="btn btn-primary my-2"><i class="bi bi-plus-circle"></i> Create Contact</a>
+
+            <% if (msg.length !== 0) { %>
+            <div class="alert alert-success" role="alert">
+                <%= msg %>
+            </div>
+            <% } %>
+
             <table class="table">
                 <thead>
                     <tr>

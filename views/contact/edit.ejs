@@ -1,0 +1,45 @@
+<%- 
+styles = "<style>input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0;}</style>";
+%>
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Form Edit Contact - <%= contact.oldName || contact.name %></h2>
+
+            <% if (typeof errors != 'undefined') { %>
+            <div class="alert alert-danger" role="alert">
+                Oops! Something wrong. Please check again.
+                <ul>
+                    <% errors.forEach(e => { %>
+                    <li>
+                        <%= e.msg %>
+                    </li>
+                    <% }) %>
+                </ul>
+            </div>
+            <% } %>
+
+            <form action="/contact/update" method="POST">
+                <input type="hidden" value="<%=  contact.oldName || contact.name %>" name="oldName">
+                <input type="hidden" value="<%=  contact.oldPhone || contact.phone %>" name="oldPhone">
+                <div class="form-floating mb-3">
+                    <input type="text" name="name" class="form-control" id="flName" value="<%= contact.name %>"
+                        placeholder="Name">
+                    <label for="flName">Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number" name="phone" class="form-control" id="flPhone" placeholder="+62"
+                        value="<%= contact.phone %>">
+                    <label for="flPhone">Phone</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" name="email" class="form-control" id="floatingInput"
+                        placeholder="name@example.com" value="<%= contact.email %>">
+                    <label for="floatingInput">Email address</label>
+                </div>
+                <button class="btn btn-primary" type="submit"> Update </button>
+            </form>
+        </div>
+    </div>
+</div>

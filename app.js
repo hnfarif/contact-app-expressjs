@@ -1,9 +1,14 @@
-import express from 'express';
+import express, {
+    json
+} from 'express';
 import morgan from 'morgan';
 import expressLayouts from 'express-ejs-layouts';
 import {
     validationResult
 } from 'express-validator';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import flash from 'connect-flash';
 
 import {
     path
@@ -27,6 +32,19 @@ app.set('layout', 'layouts/main');
 
 app.use(morgan('dev'));
 
+//konfigurasi flash message
+app.use(cookieParser('secret'));
+app.use(session({
+    cookie: {
+        maxAge: 6000
+    },
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(flash());
+// end konfigurasi flash message
+
 const contact = new Contact();
 
 app.use((req, res, next) => {
@@ -45,11 +63,12 @@ app.get('/contact', (req, res) => {
     const contacts = contact.showContact();
     res.render('contact/index', {
         title: 'Contact',
+        msg: req.flash('msg'),
         contacts
     });
 });
 
-app.post('/contact', contact.validation, (req, res) => {
+app.post('/contact', contact.validationCreate, (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -60,6 +79,7 @@ app.post('/contact', contact.validation, (req, res) => {
         });
     } else {
         contact.storeContact(req.body);
+        req.flash('msg', 'Data contact successfully added!');
         res.redirect('/contact');
     }
 });
@@ -71,12 +91,18 @@ app.get('/contact/create', (req, res) => {
     });
 });
 
+app.get('/contact/delete/:name', contact.deleteContact);
+
+app.get('/contact/edit/:name', contact.editContact)
+
 app.get('/contact/:name', (req, res) => {
     res.render('contact/detail', {
         title: 'Contact',
         contact: contact.findContact(req.params.name)
     });
 });
+
+app.post('/contact/update', contact.validationUpdate, contact.updateContact);
 
 app.use((req, res) => {
     res.status(404).render('404', {
